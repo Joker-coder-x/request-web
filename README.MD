@@ -128,6 +128,44 @@
 ```
 
 
+# 发送JSONP请求
+`request.jsonp(url, [config])`
+
+> 注意JSONP请求的method只能是GET
+
+### 方法一
+```javascript
+  request.json({
+    url: '/user/1',
+    jsonpFlag: 'cb', // default
+  })
+    .then(
+      response => {
+        // logic...
+      },
+      reason => {
+        // logic
+      }
+    );
+```
+
+### 方法二
+```javascript
+  request({
+    url: '/user/1',
+    JOSNP: true,
+    jsonpFlag: 'cb', // default
+  })
+    .then(
+      response => {
+        // logic...
+      },
+      reason => {
+        // logic
+      }
+    );
+```
+
 # 实例
 创建实例
 可以使用自定义配置新建一个 request 实例，该功能类似函数式编程中柯里化函数的思想。
@@ -141,7 +179,6 @@
     headers: {'X-Custom-Header': 'foobar'}
   });
 ``` 
-
 
 
 # 拦截器
@@ -228,16 +265,16 @@ request.interceptors.response.use(function (response) {
   });
 
   // 取消请求（message 参数是可选的）
-  Canceller.cancel('Operation canceled by the user.');
+  canceller.cancel('message');
 ```
 
 
 
 # API
 可以通过向 axios 传递相关配置来创建请求。
-`request.get(config)`
-`request.post(config)`
-`request.jsonp(config)`
+- `request.get(url, [config])`
+- `request.post(url, [config])`
+- `request.jsonp(url, [config])`
 
 
 
@@ -255,7 +292,7 @@ request.interceptors.response.use(function (response) {
   });
 ```
 
-## request(url[, config])
+## request(url, [config])
 // 发送 GET 请求（默认的方法）
 ```javascript
   request('/user/12345');

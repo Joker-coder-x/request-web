@@ -87,6 +87,14 @@ const _request = Request.prototype.request = function (config) {
      */
     let adapter = config.adapter;
     if (!(adapter && isFunction(adapter))) {
+      if (!!config.JSONP && config.method.toUpperCase() !== 'GET') {
+          reject(new RequestError({
+            message: 'JSONP请求method必须是GET!',
+            config: config
+          }));
+          return;
+      } 
+
       config.adapter = adapter = !!config.JSONP ? jsonpAdapter : xhrAdapter;
     }
 
