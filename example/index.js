@@ -1,4 +1,4 @@
-import request from "./src/index.js";
+import request from "../src/index.js";
 
 request.interceptors.request.use(config => {
   console.warn(config);

@@ -1,6 +1,12 @@
 # request 是一个轻量级的web端请求库
   - 支持ajax和jsonp请求
   
+
+# 安装
+```bash
+  npm install request-web --save
+```
+
 # 用法
 ```javascript
   request.get(url, config)
