@@ -8,10 +8,9 @@ request.interceptors.request.use(config => {
 
 request.interceptors.response.use(res => {
   console.warn(res);
-  return {
-    name: 'mike',
-    age: 18
-  };
+  res.msg += "!!!";
+
+  return res;
 });
 
 const canceller = new  request.Canceller();
@@ -24,9 +23,17 @@ request.jsonp('https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=娃娃' ,
     a: 10,
     b: 20
   },
+  adapter: function (config) {
+    console.warn('custom adater');
+    console.warn(config);
+    
+    return new Promise((resolve, reject) => {
+      resolve({ msg: '这是一条测试消息' });
+    });
+  },
   validateStatus (status) {
     console.log(status);
-    return false;
+    return true;
   }
 })
   .then(
@@ -50,5 +57,3 @@ console.dir(request);
 setTimeout(() => {
   // canceller.cancel("我手动取消了");
 }, 10);
-
-console.warn(request);
