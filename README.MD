@@ -134,6 +134,48 @@
 ```
 
 
+# 配置默认值
+你可以指定将被用在各个请求的配置默认值
+
+## 全局的 request 默认值
+```javascript
+  request.defaultConfig.baseURL = 'https://api.example.com';
+  request.defaultConfig.headers['Authorization'] = AUTH_TOKEN;
+  request.defaultConfig.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+```
+
+## 自定义实例默认值
+```javascript
+  // Set config defaultConfig when creating the instance
+  const instance = request.create({
+    baseURL: 'https://api.example.com'
+  });
+
+  // Alter defaultConfig after instance has been created
+  instance.defaultConfig.headers['Authorization'] = AUTH_TOKEN;
+```
+
+## 配置的优先顺序
+配置会以一个优先顺序进行合并。这个顺序是：在 库的默认值，然后是构造实例时传入的的 config 参数，最后是请求的 config 参数。后者将优先于前者。这里是一个例子：
+
+```javascript
+  // 使用由库提供的配置的默认值来创建实例
+  // 此时超时配置的默认值是 `0`
+  const instance = request.create();
+
+  // 覆写库的超时默认值
+  // 现在，在超时前，所有请求都会等待 2.5 秒
+  instance.defaultConfig.timeout = 2500;
+
+  // 为已知需要花费很长时间的请求覆写超时设置
+  instance.get('/longRequest', {
+    timeout: 5000
+  });
+```
+
+
+
+<br />
 # 发送JSONP请求
 `request.jsonp(url, [config])`
 
@@ -187,6 +229,44 @@
 ``` 
 
 
+# 请求方法的别名
+可以通过向 axios 传递相关配置来创建请求。
+- `request.get([url[, config]])`
+- `request.post([url[, config]])`
+- `request.options([url,[ config]])`
+- `request.head([url[, config]])`
+- `request.put([url[, config]])`
+- `request.patch([url[, config]])`
+- `request.jsonp([url[, config]])`
+
+
+
+## request(config)
+
+```javascript
+  // 发送 POST 请求
+  request({
+    method: 'post',
+    url: '/user/12345',
+    data: {
+      firstName: 'Fred',
+      lastName: 'Flintstone'
+    }
+  });
+```
+
+## request(url, [config])
+// 发送 GET 请求（默认的方法）
+```javascript
+  request('/user/12345');
+```
+
+# 并发
+处理并发请求的助手函数，内部直接调动了Promise.all和Promise.race
+
+`request.all(promises)`
+`request.race(promises)`
+
 # 拦截器
 
 拦截器
@@ -194,7 +274,7 @@
 
 ```javascript
   // 添加请求拦截器
-  request.interceptors.request.use(function (config) {
+  request.interceptors.request.use(function fn1(config) {
     // 在发送请求之前做些什么
     return config;
   }, function (error) {
@@ -202,8 +282,26 @@
     return Promise.reject(error);
   });
 
-// 添加响应拦截器
-request.interceptors.response.use(function (response) {
+  // 添加多个请求拦截器，多个拦截器之前会按照注册顺序依次执行，上个拦截器的执行结果会作为下一个拦截器的参数，如果返回值是false的话直接阻止该请求发送，并且后面的拦截器不会被执行 [可选操作]
+  request.interceptors.request.use(function fn2(config) {
+    // 在发送请求之前做些什么
+    return config;
+  }, function (error) {
+    // 对请求错误做些什么
+    return Promise.reject(error);
+  });
+
+  // 添加响应拦截器
+  request.interceptors.response.use(function fn1(response) {
+    // 对响应数据做点什么
+    return response;
+  }, function (error) {
+    // 对响应错误做点什么
+    return Promise.reject(error);
+  });
+  
+  // 添加多个响应拦截器 [可选操作]
+  request.interceptors.response.use(function fn2(response) {
     // 对响应数据做点什么
     return response;
   }, function (error) {
@@ -232,6 +330,7 @@ request.interceptors.response.use(function (response) {
 
 
 
+<br />
 # 自定义请求适配器
 可以用该配置来自定义您的请求适配器。
 
@@ -272,34 +371,4 @@ request.interceptors.response.use(function (response) {
 
   // 取消请求（message 参数是可选的）
   canceller.cancel('message');
-```
-
-
-
-# API
-可以通过向 axios 传递相关配置来创建请求。
-- `request.get(url, [config])`
-- `request.post(url, [config])`
-- `request.jsonp(url, [config])`
-
-
-
-## request(config)
-
-```javascript
-  // 发送 POST 请求
-  request({
-    method: 'post',
-    url: '/user/12345',
-    data: {
-      firstName: 'Fred',
-      lastName: 'Flintstone'
-    }
-  });
-```
-
-## request(url, [config])
-// 发送 GET 请求（默认的方法）
-```javascript
-  request('/user/12345');
 ```

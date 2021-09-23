@@ -5,8 +5,6 @@ export const METHODS = [
   'PATCH',
   'DELETE',
   'OPTIONS',
-  'TRACE',
   'HEAD',
-  'DELETE'
 ];
 

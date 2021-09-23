@@ -10,5 +10,6 @@ export default {
   baseURL: '',
   validateStatus: function (status) {
     return status >= 200 && status < 300; 
-  }
+  },
+  headers: {}
 };

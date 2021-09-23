@@ -110,19 +110,14 @@ const _request = Request.prototype.request = function (config) {
   });
 }
 
-Request.prototype.get = function (config) {
-  config = getConfig.apply(this, arguments);
-  config.method = 'GET';
-
-  return _request.call(this, config);
-}
-
-Request.prototype.post = function (config) {
-  config = getConfig.apply(this, arguments);
-  config.method = 'POST';
-
-  return _request.call(this, config);
-}
+METHODS.forEach(function (method) {
+  Request.prototype[method.toLowerCase()] = function (config) {
+    config = getConfig.apply(this, arguments);
+    config.method = method;
+  
+    return _request.call(this, config);
+  }
+});
 
 Request.prototype.jsonp = function (config) {
   config = getConfig.apply(this, arguments);

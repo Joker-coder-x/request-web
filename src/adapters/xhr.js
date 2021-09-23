@@ -38,6 +38,11 @@ function xhrAdapter (config) {
       validateStatus = config.validateStatus,
       t = null;
 
+    function clearEffect () {
+      clearTimeout(t);
+      t = null;
+    }
+
     if (!xhr) {
       reject(new RequestError({
         message: '您的浏览器不支持异步发起HTTP请求，请更新您的浏览器版本！',
@@ -73,8 +78,7 @@ function xhrAdapter (config) {
         config: config
       }));
       xhr = null;
-      clearTimeout(t);
-      t = null;
+      clearEffect();
     }
 
     // Handle progress if needed
@@ -90,8 +94,7 @@ function xhrAdapter (config) {
     // 监听状态改变
     xhr.onreadystatechange = function (){
       if(xhr.readyState === 4){
-          clearTimeout(t);
-          t = null;
+          clearEffect();
 
           if (validateStatus(xhr.status)) {
             resolve(buildResponseData(resolveDataType(responseType, xhr), config, xhr));
@@ -109,11 +112,10 @@ function xhrAdapter (config) {
             return;
           };
 
+          reject(canceller);
           xhr.abort();
           xhr = null;
-          clearTimeout(t);
-          t = null;
-          reject(canceller);
+          clearEffect();
         },
         reject
       );
@@ -122,14 +124,14 @@ function xhrAdapter (config) {
     if (timeout !== 0) {
       // 请求超时：部分浏览器不支持ontimeout事件，所以这里做兼容性处理。 
       t = setTimeout(function (){
-        xhr.abort();
-        clearTimeout(t);
-        t = null;
-        xhr = null;
         reject(new RequestError({
           message: '请求超时了',
           config: config
         }));
+
+        xhr.abort();
+        clearEffect();
+        xhr = null;
       }, timeout);
     }
 

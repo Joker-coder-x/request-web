@@ -6,30 +6,25 @@ request.interceptors.request.use(config => {
   // return false; // 阻止请求
 });
 
+
 request.interceptors.response.use(res => {
   console.warn(res);
-  res.msg += "!!!";
 
   return res;
 });
 
+request.defaultConfig.headers['Test'] = "this is test msg";
+request.defaultConfig.timeout = 1500;
+
 const canceller = new  request.Canceller();
 // https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=
 // https://jsonplaceholder.typicode.com/todos/1
-request.jsonp('https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=娃娃' , {
+request.get('https://jsonplaceholder.typicode.com/todos/10' , {
   canceller: canceller,
-  timeout: 1000 * 3,
+  // timeout: 1000 * 3,
   params: {
     a: 10,
     b: 20
-  },
-  adapter: function (config) {
-    console.warn('custom adater');
-    console.warn(config);
-    
-    return new Promise((resolve, reject) => {
-      resolve({ msg: '这是一条测试消息' });
-    });
   },
   validateStatus (status) {
     console.log(status);

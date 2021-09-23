@@ -1,6 +1,6 @@
 {
   "name": "request-web",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "一个轻量级的web端网络请求库",
   "main": "./src/index.js",
   "scripts": {

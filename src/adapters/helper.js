@@ -1,8 +1,11 @@
 function parseResponseHeader (xhr) {
   const headerArr = xhr.getAllResponseHeaders().trim().split('\r\n');
   return headerArr.reduce((map, item) => {
-    const [key, value] = item.split(':');
-    map[key.trim()] = value.trim();
+    const [key = '', value = ''] = item.split(':');
+    
+    if (key && value) {
+        map[key.trim()] = value.trim();
+    }
 
     return map;
   }, {});
