@@ -88,7 +88,7 @@
     // `validateStatus` 定义对于给定的HTTP 响应状态码是 resolve 或 reject  promise 。如果 `validateStatus` 返回 `true` (或者设置为 `null` 或 `undefined`)，promise 将被 resolve; 否则，promise 将被 rejecte
     validateStatus: function (status) {
       return status >= 200 && status < 300; // default
-    }，
+    },
 
     // 用于取消请求的Canceller实例对象
     canceller: canceller
@@ -372,3 +372,35 @@
   // 取消请求（message 参数是可选的）
   canceller.cancel('message');
 ```
+<<<<<<< HEAD
+=======
+
+
+# API
+可以通过向 axios 传递相关配置来创建请求。
+- `request.get(url, [config])`
+- `request.post(url, [config])`
+- `request.jsonp(url, [config])`
+
+
+
+## request(config)
+
+```javascript
+  // 发送 POST 请求
+  request({
+    method: 'post',
+    url: '/user/12345',
+    data: {
+      firstName: 'Fred',
+      lastName: 'Flintstone'
+    }
+  });
+```
+
+## request(url, [config])
+// 发送 GET 请求（默认的方法）
+```javascript
+  request('/user/12345');
+```
+>>>>>>> c9a657c67c21e2174b6c4ce3be638f5d100e0d04
