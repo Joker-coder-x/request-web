@@ -173,9 +173,6 @@
   });
 ```
 
-
-
-<br />
 # 发送JSONP请求
 `request.jsonp(url, [config])`
 

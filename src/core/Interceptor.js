@@ -13,6 +13,8 @@ class Interceptor {
       onFulfilled,
       onRejected 
     });
+
+    return uid;
   }
 
   remove (id) {
